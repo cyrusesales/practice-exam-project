@@ -65,3 +65,23 @@ class ExamAttempt(models.Model):
         self.score = (earned_points / total_points) * 100 if total_points > 0 else 0
         self.save()
         return self.score
+    
+class Answer(models.Model):
+    attempt = models.ForeignKey(ExamAttempt, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True, blank=True)
+    text_answer = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Answer to {self.question}"
+    
+    def is_correct(self):
+        if self.question.question_type == 'MCQ':
+            return self.selected_choice and self.selected_choice.is_correct
+        elif self.question.question_type == 'TF':
+            return self.selected_choice and self.selected_choice.is_correct
+        elif self.question.question_type == 'SHORT':
+            # For short answer, we'll need manual grading
+            return False
+        return False
+    
