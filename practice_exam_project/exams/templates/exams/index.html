@@ -1,0 +1,36 @@
+{% extends "exams/base.html" %}
+
+{% block title  %}Practice Exam System - Home{% endblock title  %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Welcome to Practice Exam System</h1>
+    <p class="lead">Prepare yourself for exams with our comprehensive practice tests.</p>
+    <hr class="my-4">
+    <p>Choose from a variety of exams and track your progress.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'exam_list'%}" role="button">Views Exams</a>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-12">
+        <h2>Recent Exams</h2>
+        <div class="list-group">
+            {% for exam in exams %}
+                <a href="{% url 'exam_detail' exam.id %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ exam.title }}</h5>
+                        <small>{{ exam.created_at|date:"F j, Y" }}</small>
+                    </div>
+                    <p class="mb-1">{{ exam.description|truncatewords:20 }}</p>
+                    <small>Time Limit: {{ exam.time_limit }} minutes</small>
+                </a>
+            {% empty %}
+                <div class="list-group-item">
+                    <p>No exams available yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock  %}
