@@ -1,0 +1,31 @@
+{% extends "exams/base.html" %}
+
+{% block title %}Available Exams{% endblock  %}
+
+{% block content %}
+<h1>Available Exams</h1>
+
+<div class="row">
+    {% for exam in exams %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ exam.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Time Limit: {{ exam.time_limit }} minutes</h6>
+                <p class="card-text">{{ exam.description|truncatewords:30 }}</p>
+                <a href="{% url 'exam_detail' exam.id %}" class="btn btn-primary">View Details</a>
+            </div>
+            <div class="card-footer text-muted">
+                Created on {{ exam.created_at|date:"F j, Y" }} by {{ exam.created_by.username }}
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                no exams available yet.
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
