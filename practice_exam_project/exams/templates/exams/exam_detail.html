@@ -1,0 +1,61 @@
+{% extends "exam/base.html" %}
+
+{% block title %}{{ exam.title }}{% endblock  %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ exam.title }}</h1>
+        <p class="lead">{{ exam.description }}</p>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Exam Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Time Limit:</strong> {{ exam.time_limit }} minutes</p>
+                <p><strong>Total Questions:</strong> {{ exam.get_questions.count }}</p>
+                <p><strong>Total Points:</strong> {{ exam.get_total_score }}</p>
+                <p><strong>Created By:</strong> {{ exam.created_by.username }}</p>
+                <p><strong>Created On:</strong> {{ exam.created_at|date:"F j, Y" }}</p>
+            </div>
+        </div> 
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'start_exam' exam.id %}" class="btn btn-primary btn-lg">Start Exam</a>
+        {% else %}
+            <div class="alert alert-warning">
+                You need to <a href="{% url 'login' %}">login</a> to take this exam.
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card=header">
+                <h5 class="mb-0">Question Types</h5>
+            </div>
+            <div class="card-body">
+                {% with questions=exam.get_questions %}
+                    {% with mcq=questions.filter.question_type='MCQ' tf=questions.filter.question_type="TF" short=questions.filter.question_type='SHORT' %}
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Multiple Choice
+                                <span class="badge bg-primary rounded-pill">{{ mcq.count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                True/False
+                                <span class="badge bg-primary rounded-pill">{{ tf.count }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Short Answer
+                                <span class="badge bg-primary rounded-pill">{{ short.count }}</span>
+                            </li>
+                        </ul>
+                    {% endwith %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}
