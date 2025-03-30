@@ -1,0 +1,32 @@
+{% extends "exams/base.html" %}
+
+{% block title %}Results: {{ attempt.exam.title}}{% endblock  %}
+
+{% block content %}
+<h1>Exam Results</h1>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">{{ attempt.exam.title }}</h5>
+    </div>
+    <div class="card-body">
+        <h2>Your Score: {{ attempt.score|floatformat:2 }}%</h2>
+        <p>Time Taken: {{ attempt.end_time|timeuntil:attempt.start_time }}</p>
+        <p>Completed on: {{ attempt.end_time|date:"F j, Y, g:i a" }}</p>
+    </div>
+</div>
+
+<h2>Question Review</h2>
+
+{% for answer in answers %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Question {{ forloop.counter }}</h5>
+        </div>
+        <div class="card-body">
+            <p>{{ answer.question.question_text }}</p>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock  %}
